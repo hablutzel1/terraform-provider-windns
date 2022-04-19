@@ -144,10 +144,11 @@ func resourceWinDNSRecordRead(d *schema.ResourceData, m interface{}) error {
 	record_name := d.Get("record_name").(string)
 
 	//Get-DnsServerResourceRecord -ZoneName "contoso.com" -Name "Host03" -RRType "A"
-	var psCommand string = "try { $record = Get-DnsServerResourceRecord -ZoneName " + zone_name + " -RRType " + record_type + " -Name " + record_name + " -ErrorAction Stop } catch { $record = '''' }; if ($record) { write-host 'RECORD_FOUND' }"
+	// TODO check the possibility to use something like https://github.com/KnicKnic/go-powershell to interact with PowerShell instead of the basic goPSRemoting.
+	var psCommand string = "Get-DnsServerResourceRecord -ZoneName " + zone_name + " -RRType " + record_type + " -Name " + record_name
 	_, err := goPSRemoting.RunPowershellCommand(client.username, client.password, client.server, psCommand, client.usessl, client.usessh)
 	if err != nil {
-		if !strings.Contains(err.Error(), "ObjectNotFound") {
+		if !strings.Contains(err.Error(), "Failed to get "+record_name+" record in "+zone_name+" zone on") {
 			//something bad happened
 			return err
 		} else {

@@ -4,7 +4,11 @@ This is the repository for a Terraform Windows DNS Provider, which you can use t
 
 The provider uses the [github.com/gorillalabs/go-powershell/backend](github.com/gorillalabs/go-powershell/backend) package to "shell out" to PowerShell, fire up a WinRM session, and perform the actual DNS work. I made this decision because the Go WinRM packages I was able to find only supported WinRM in Basic/Unencrypted mode, which is not doable in our environment. Shelling out to PowerShell is admittedly ugly, but it allows the use of domain accounts, HTTPS, etc.
 
-# Using the Provider
+## Requirements
+
+- Tested with PowerShell 7.2.2. Some things possibly won't work with older PowerShell versions, e.g. 5.x.
+
+## Using the Provider
 
 ### Example
 
