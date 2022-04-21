@@ -6,17 +6,19 @@ The provider uses the [github.com/gorillalabs/go-powershell/backend](github.com/
 
 ## Requirements
 
-- Tested with PowerShell 7.2.2. Some things possibly won't work with older PowerShell versions, e.g. 5.x.
+- PowerShell is required. Tested with PowerShell 7.2.2 on Windows and macOS. Some things possibly won't work with older PowerShell versions, e.g. 5.x.
 
 ## Using the Provider
+
+### Configure the provider
+- username (env:USERNAME) - An administrator username. Note that the domain in the username might be required (e.g. "jdoe@example.org") as it has been observed sometimes for macOS PowerShell clients. Another option might be to explicitly choose Basic authentication and it can be obtained with the following hack: setting the server argument to "server -Authentication Basic". 
+- password (env:PASSWORD) 
+- server (env:SERVER) - the server where we'll create a WinRM session into to perform the DNS operations.
+- usessl (env:USESSL) - whether or not to use HTTPS for our WinRM session (by default port TCP/5986). Is using this argument, then it is required to configure WinRM to listen on HTTPS (TCP 5986). This can be quickly set up with the commands in https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html#winrm-setup (TODO confirm the safety of this procedure). If using HTTPS, the server name argument should match one of the names in the TLS certificate and additionally this certificate should be trusted by the PowerShell client system.
 
 ### Example
 
 ```hcl
-# configure the provider
-# username + password - used to build a powershell credential
-# server - the server we'll create a WinRM session into to perform the DNS operations
-# usessl - whether or not to use HTTPS for our WinRM session (by default port TCP/5986)
 variable "username" {
   type = "string"
 }
@@ -49,7 +51,7 @@ resource "windns" "dnscname" {
 }
 ```
 
-# Building
+## Building
 0. Make sure you have $GOPATH set ($env:GOPATH='c:\wip\go' on Windows, etc)
 1. git clone https://github.com/PortOfPortland/terraform-provider-windns
 2. cd github.com\portofportland\terraform-provider-windns

@@ -17,6 +17,7 @@ func Provider() terraform.ResourceProvider {
 			"username": &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
+				// TODO prefix these environment variable names with WINDNS_
 				DefaultFunc: schema.EnvDefaultFunc("USERNAME", nil),
 				Description: "Username to connect to AD.",
 			},
